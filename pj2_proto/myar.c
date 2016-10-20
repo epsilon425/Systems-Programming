@@ -1,3 +1,7 @@
+/* 
+All of optional commands d,v has been implemented.
+Support for mutiple file is still on the way
+*/
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +15,8 @@
 #include <ar.h>
 #include <string.h>
 #include <time.h>
+#include <utime.h>
+
 #define ARMAG	"!<arch>\n"	/* String that begins an archive file.  */
 #define SARMAG	8		/* Size of that string.  */
 #define ARFMAG	"`\n"		/* String in ar_fmag at end of each header.  */
@@ -18,6 +24,8 @@ struct dirent mydirect;
 struct ar_hdr myheader;
 struct stat archivestat;
 struct stat filestat;
+struct utimbuf mytime; 
+
 /* for git diff test */
 /* for git(this is for test word diff) diff head*/
 void t_function(char archivename[])
@@ -54,7 +62,7 @@ void x_function(char archivename[], char file[])
 int fd;
 int archivefd= open(archivename,0);
 int filefd   = open(file   ,0);
-
+long mtime;
 fstat(archivefd, &archivestat);
 fstat(filefd   , &filestat   );
 lseek(archivefd,8,SEEK_SET);
@@ -78,8 +86,9 @@ while(425)
 	}
 		
 	if(strncmp(filename,file,count)==0)
-		{
-		printf("%d",filesize);
+		{	
+		sscanf(myheader.ar_date,"%ld",&mtime);
+		printf("%ld\n",mtime);		
 		filebuf = (char*)malloc(filesize);
 		read(archivefd,filebuf,filesize);
 		break;		
@@ -92,6 +101,9 @@ while(425)
 		return;	
 		}	
 	}
+printf("%ld\n",mtime);
+mytime.actime = mtime;
+printf("%ld\n",mytime.actime);
 int newfd = creat(file,0666);
 write(newfd, filebuf,filesize);
 }
@@ -149,14 +161,17 @@ if(open(filename,0)==-1)
 int filefd   = open(filename,0666);
 fstat(filefd,&filestat);
 char* buffer = (char*) malloc(filestat.st_blksize);
-char* headbuffer = (char*)malloc(60);
+char* headbuffer = (char*)malloc(61);
 read(filefd,&buffer,filestat.st_size);
 strcat(filename,"/");
 sprintf(headbuffer,"%-16s%-12ld%-6d%-6d%-8d%-10ld%-2s",filename,filestat.st_mtime,filestat.st_uid,filestat.st_gid,filestat.st_mode,filestat.st_size,ARFMAG);
+
 int i=0;
 while(headbuffer[i]!=' ')i++;
 headbuffer[i]=='/';
 int fdtemp = open(archivename,000);
+
+
 if(fdtemp==-1)
 {
 close(fdtemp);
@@ -164,6 +179,8 @@ int newfd = creat(archivename,0666);
 write(newfd,ARMAG,SARMAG);
 write(newfd,headbuffer,60);
 write(newfd,&buffer,filestat.st_size);
+if(filestat.st_size%2!=0)
+write(newfd,"\n",1);
 }
 
 else
@@ -173,6 +190,8 @@ fstat(archivefd, &archivestat);
 lseek(archivefd,0,SEEK_END);
 write(archivefd,headbuffer,60);
 write(archivefd,&buffer,filestat.st_size);
+if(filestat.st_size%2!=0)
+write(archivefd,"\n",1);
 }
 
 }
@@ -200,7 +219,6 @@ if (dp != NULL)
 		   long tpassed;
         	   time(&tpassed);
 		   long tdiff = tpassed - filestat.st_mtime;
-	           printf("%s:%ld\n",dirfilename,tdiff);
 		   if(1<=(tdiff/3600)) q_function(archive,dirfilename);	
 		   }
 	   }
@@ -293,9 +311,9 @@ if(*argv[1]=='a') a_function(argv[2]);
 
 if(argc==4)
 {
-if(*argv[1]=='x');
-if(*argv[1]=='q');
-if(*argv[1]=='d');
+if(*argv[1]=='x') x_function(argv[2],argv[3]);
+if(*argv[1]=='q') q_function(argv[2],argv[3]);
+if(*argv[1]=='d') d_function(argv[2],argv[3]);
 }
 
 }	
