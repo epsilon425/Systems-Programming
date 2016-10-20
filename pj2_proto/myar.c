@@ -167,11 +167,15 @@ if(open(filename,0)==-1)
 	return;
 
 	}
-int filefd   = open(filename,0666);
+
+int filefd = open(filename,0666);
 fstat(filefd,&filestat);
-char* buffer = (char*) malloc(filestat.st_blksize);
+
+long BLOCKSIZE=filestat.st_blksize;
+long FILESIZE=filestat.st_size;
+int blocks = FILESIZE/BLOCKSIZE;
+int remainbyte = FILESIZE%BLOCKSIZE;
 char* headbuffer = (char*)malloc(61);
-read(filefd,&buffer,filestat.st_size);
 strcat(filename,"/");
 sprintf(headbuffer,"%-16s%-12ld%-6d%-6d%-8d%-10ld%-2s",filename,filestat.st_mtime,filestat.st_uid,filestat.st_gid,filestat.st_mode,filestat.st_size,ARFMAG);
 
@@ -187,9 +191,21 @@ close(fdtemp);
 int newfd = creat(archivename,0666);
 write(newfd,ARMAG,SARMAG);
 write(newfd,headbuffer,60);
-write(newfd,&buffer,filestat.st_size);
+while(blocks>0)
+	{
+		char* buffer = (char*) malloc(filestat.st_blksize);
+		read(filefd,&buffer,sizeof(buffer));
+		write(newfd,&buffer,sizeof(buffer));
+		
+	}
+if(remainbyte!=0)
+	{
+		char* buffer = (char*) malloc(filestat.st_blksize);
+		read(filefd,&buffer,remainbyte);
+		write(newfd,&buffer,remainbyte);
+	}
 if(filestat.st_size%2!=0)
-write(newfd,"\n",1);
+	write(newfd,"\n",1);
 }
 
 else
@@ -198,9 +214,21 @@ int archivefd= open(archivename,0666);
 fstat(archivefd, &archivestat);
 lseek(archivefd,0,SEEK_END);
 write(archivefd,headbuffer,60);
-write(archivefd,&buffer,filestat.st_size);
+while(blocks>0)
+	{
+		char* buffer = (char*) malloc(filestat.st_blksize);
+		read(filefd,&buffer,sizeof(buffer));
+		write(archivefd,&buffer,sizeof(buffer));
+		
+	}
+if(remainbyte!=0)
+	{
+		char* buffer = (char*) malloc(filestat.st_blksize);
+		read(filefd,&buffer,remainbyte);
+		write(archivefd,&buffer,remainbyte);	
+	}
 if(filestat.st_size%2!=0)
-write(archivefd,"\n",1);
+	write(archivefd,"\n",1);
 }
 
 }
@@ -321,7 +349,11 @@ if(*argv[1]=='a') a_function(argv[2]);
 if(argc==4)
 {
 if(*argv[1]=='x') x_function(argv[2],argv[3]);
-if(*argv[1]=='q') q_function(argv[2],argv[3]);
+if(*argv[1]=='q') 
+{
+printf("%s\n","entering q");
+q_function(argv[2],argv[3]);
+}
 if(*argv[1]=='d') d_function(argv[2],argv[3]);
 }
 
