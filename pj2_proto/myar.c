@@ -15,7 +15,7 @@ Support for mutiple file is still on the way
 #include <ar.h>
 #include <string.h>
 #include <time.h>
-#include <utime.h>
+#include <sys/time.h>
 
 #define ARMAG	"!<arch>\n"	/* String that begins an archive file.  */
 #define SARMAG	8		/* Size of that string.  */
@@ -24,7 +24,7 @@ struct dirent mydirect;
 struct ar_hdr myheader;
 struct stat archivestat;
 struct stat filestat;
-struct utimbuf mytime; 
+struct timeval mytime; 
 
 /* for git diff test */
 /* for git(this is for test word diff) diff head*/
@@ -86,9 +86,9 @@ while(425)
 	}
 		
 	if(strncmp(filename,file,count)==0)
-		{	
-		sscanf(myheader.ar_date,"%ld",&mtime);
-		printf("%ld\n",mtime);		
+		{
+		printf("%s\n",myheader.ar_date);
+		sscanf(myheader.ar_date,"%ld",&mtime);		
 		filebuf = (char*)malloc(filesize);
 		read(archivefd,filebuf,filesize);
 		break;		
@@ -101,11 +101,18 @@ while(425)
 		return;	
 		}	
 	}
-printf("%ld\n",mtime);
-mytime.actime = mtime;
-printf("%ld\n",mytime.actime);
+
+mytime.tv_sec=mtime;
+mytime.tv_usec=mtime;
+
+//printf("%ld, %ld\n",mytime.tv_sec,mytime.tv_usec);
 int newfd = creat(file,0666);
 write(newfd, filebuf,filesize);
+utimes(file,&mytime);
+close(newfd);
+struct stat test;
+stat(file,&test);
+printf("%ld\n",test.st_mtime);
 }
 
 void v_function(char archivename[])
