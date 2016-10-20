@@ -214,52 +214,60 @@ if (dp != NULL)
 void d_function(char archivename[], char file[])
 {
 int fd;
-int archivefd=open(archivename,0666);
-int filefd   =open(file,0666);
+int archivefd= open(archivename,0);
+int filefd   = open(file   ,0);
 
-fstat(archivefd,&archivestat);
-long archivesize = archivestat.st_size-8;
+fstat(archivefd, &archivestat);
+fstat(filefd   , &filestat   );
+lseek(archivefd,8,SEEK_SET);
 int filesize=0;
+int archivesize=archivestat.st_size-8;
 char* filebuf;
-int newarchivesize;
-unlink(archivename);
 int count = strlen(file);
-while(425)
-	{
-	char* filename = (char*) malloc(sizeof(myheader.ar_name));
-	struct ar_hdr myheader;
-	read(archivefd, &myheader, 60);
-	archivesize = archivesize - 60;
-	sscanf(myheader.ar_size,"%d",&filesize);
-	int i=0;
-	for(i=0;i<sizeof(filename);i++)
-	{
-		if(filename[i]='/')filename[i]=' ';
-	}
-	
-	if(strncmp(filename,file,count)==0) break;
-	lseek(archivefd,filesize,SEEK_CUR);
-	archivesize = archivesize-filesize;
-	if(archivesize<0)
-		{
-		printf("Wrong input, file does not exist in archive\n");
-		return;
-		}
+char* filenameF=(char*)malloc(sizeof(myheader.ar_name));
+while(425)      
+        {       
+        char* filename = (char*)malloc(sizeof(myheader.ar_name));
+        struct ar_hdr myheader;
+        read(archivefd, &myheader, 60);
+        archivesize = archivesize-60;
+        sscanf(myheader.ar_size,"%d",&filesize);
+        if(filesize%2!=0) filesize = filesize+1;
+        sscanf(myheader.ar_name,"%s",filename);
+        int i=0;
+        for(i=0;i<sizeof(filename);i++)
+        {
+                if(filename[i]=='/') filename[i]=' ';
+        }       
+                
+        if(strncmp(filename,file,count)==0)
+                {
+		filenameF=filename;
+                break;
+                }
+        lseek(archivefd,filesize,SEEK_CUR);
+        archivesize = archivesize-filesize;
+        if(archivesize<0)
+                {
+                printf("Wrong input, file does not exist in archive\n");
+                return;
+                }
+        } 
 
-	}
- 
+
 int prearchivesize = archivestat.st_size-60-filesize;
 archivesize = archivesize-filesize;
 
-filebuf=(char*)malloc(archivesize+prearchivesize);
+filebuf=(char*)malloc(prearchivesize);
 
 lseek(archivefd,0,SEEK_SET);
 //creat(archivename,0666);
 read(archivefd,filebuf,prearchivesize);
-lseek(archivefd,prearchivesize+60+filesize,SEEK_SET);
+lseek(archivefd,filesize+60,SEEK_CUR);
 read(archivefd,filebuf,archivesize);
+unlink(archivename);
 int newarchivefd=creat(archivename,0666);
-write(newarchivefd,filebuf,filesize);
+write(newarchivefd,filebuf,prearchivesize);
 close(archivefd);
 }
 		
@@ -274,5 +282,20 @@ void main(int argc, char* argv[])
 //v_function(argv[1]);
 //q_function(argv[1], argv[2]);
 //a_function(argv[1]);
+//d_function(argv[1],argv[2]);
+//argc includes the ./a.out
+if(argc==3)
+{
+if(*argv[1]=='t') t_function(argv[2]);
+if(*argv[1]=='v') v_function(argv[2]);
+if(*argv[1]=='a') a_function(argv[2]);
+}
+
+if(argc==4)
+{
+if(*argv[1]=='x');
+if(*argv[1]=='q');
+if(*argv[1]=='d');
+}
 
 }	
