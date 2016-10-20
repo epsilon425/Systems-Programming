@@ -2,6 +2,9 @@
 All of optional commands d,v has been implemented.
 Support for mutiple file is still on the way
 */
+/* This code is my own work I have not discussed the work with 
+any tutor or shared or received code from another student -Paul Ahn */
+
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,7 +52,7 @@ while(425)
 	{
 		if(filename[i]=='/') filename[i]=' ';
 	}
-	printf("%s\n",filename);	
+		
 	lseek(archivefd,filesize,SEEK_CUR);
 	if(archivesize==0) return;	
 	}
@@ -194,15 +197,15 @@ write(newfd,headbuffer,60);
 while(blocks>0)
 	{
 		char* buffer = (char*) malloc(filestat.st_blksize);
-		read(filefd,&buffer,sizeof(buffer));
-		write(newfd,&buffer,sizeof(buffer));
+		read(filefd,buffer,sizeof(buffer));
+		write(newfd,buffer,sizeof(buffer));
 		
 	}
 if(remainbyte!=0)
 	{
 		char* buffer = (char*) malloc(filestat.st_blksize);
-		read(filefd,&buffer,remainbyte);
-		write(newfd,&buffer,remainbyte);
+		read(filefd,buffer,remainbyte);
+		write(newfd,buffer,remainbyte);
 	}
 if(filestat.st_size%2!=0)
 	write(newfd,"\n",1);
@@ -217,15 +220,15 @@ write(archivefd,headbuffer,60);
 while(blocks>0)
 	{
 		char* buffer = (char*) malloc(filestat.st_blksize);
-		read(filefd,&buffer,sizeof(buffer));
-		write(archivefd,&buffer,sizeof(buffer));
+		read(filefd,buffer,sizeof(buffer));
+		write(archivefd,buffer,sizeof(buffer));
 		
 	}
 if(remainbyte!=0)
 	{
 		char* buffer = (char*) malloc(filestat.st_blksize);
-		read(filefd,&buffer,remainbyte);
-		write(archivefd,&buffer,remainbyte);	
+		read(filefd,buffer,remainbyte);
+		write(archivefd,buffer,remainbyte);	
 	}
 if(filestat.st_size%2!=0)
 	write(archivefd,"\n",1);
@@ -349,11 +352,7 @@ if(*argv[1]=='a') a_function(argv[2]);
 if(argc==4)
 {
 if(*argv[1]=='x') x_function(argv[2],argv[3]);
-if(*argv[1]=='q') 
-{
-printf("%s\n","entering q");
-q_function(argv[2],argv[3]);
-}
+if(*argv[1]=='q') q_function(argv[2],argv[3]); 
 if(*argv[1]=='d') d_function(argv[2],argv[3]);
 }
 
