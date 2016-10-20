@@ -25,9 +25,7 @@ struct ar_hdr myheader;
 struct stat archivestat;
 struct stat filestat;
 struct timeval mytime; 
-
-/* for git diff test */
-/* for git(this is for test word diff) diff head*/
+//====================================================================================T_FUNC
 void t_function(char archivename[])
 {
 int archivefd= open(archivename,0);
@@ -56,13 +54,14 @@ while(425)
 	if(archivesize==0) return;	
 	}
 }
-
+//====================================================================================X_FUNC
 void x_function(char archivename[], char file[])
 {
 int fd;
 int archivefd= open(archivename,0);
 int filefd   = open(file   ,0);
 long mtime;
+unsigned int mmode;
 fstat(archivefd, &archivestat);
 fstat(filefd   , &filestat   );
 lseek(archivefd,8,SEEK_SET);
@@ -87,8 +86,10 @@ while(425)
 		
 	if(strncmp(filename,file,count)==0)
 		{
-		printf("%s\n",myheader.ar_date);
-		sscanf(myheader.ar_date,"%ld",&mtime);		
+		//printf("%s\n",myheader.ar_date);
+		//printf("%s\n",myheader.ar_mode);
+		sscanf(myheader.ar_date,"%ld",&mtime);
+		sscanf(myheader.ar_mode,"%d",&mmode);		
 		filebuf = (char*)malloc(filesize);
 		read(archivefd,filebuf,filesize);
 		break;		
@@ -105,16 +106,17 @@ while(425)
 mytime.tv_sec=mtime;
 mytime.tv_usec=mtime;
 
-//printf("%ld, %ld\n",mytime.tv_sec,mytime.tv_usec);
 int newfd = creat(file,0666);
 write(newfd, filebuf,filesize);
 utimes(file,&mytime);
+umask(mmode);
 close(newfd);
 struct stat test;
 stat(file,&test);
-printf("%ld\n",test.st_mtime);
+//printf("%ld\n",test.st_mtime);
+//printf("%d\n",test.st_mode);
 }
-
+//======================================================================================V_FUNC
 void v_function(char archivename[])
 {
 int archivefd = open(archivename,0);
@@ -155,7 +157,7 @@ while(425)
 	}
 }
 
-
+//=====================================================================================================================================================Q_FUNC
 void q_function(char archivename[], char filename[])
 {
 if(open(filename,0)==-1)
@@ -202,7 +204,7 @@ write(archivefd,"\n",1);
 }
 
 }
-
+//=========================================================================================================================A_FUNC
 void a_function(char archive[])
 {  
 
@@ -235,7 +237,7 @@ if (dp != NULL)
 	}
 
 }
-
+//================================================================================================================================================D_FUNC
 void d_function(char archivename[], char file[])
 {
 int fd;
@@ -298,7 +300,7 @@ close(archivefd);
 		
 			
 
-
+//===================================================================================================================end of functions
 
 void main(int argc, char* argv[])
 {
