@@ -1,8 +1,3 @@
-/*
- THIS CODE IS MY OWN WORK, IT WAS WRITTEN WITHOUT CONSULTING
-
-A TUTOR OR CODE WRITTEN BY OTHER STUDENTS - Paul Ahn 
-*/
 #include <stdio.h>
 #include <stdlib.h>
 
