@@ -1,10 +1,3 @@
-/*      
-All of optional commands d,v has been implemented.
-Support for mutiple file is still on the way
-*/
-/* This code is my own work I have not discussed the work with 
-any tutor or shared or received code from another student -Paul Ahn */
-
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
