@@ -1,6 +1,7 @@
 Step by step Development of a string parser that creates a child process  
 and passes string stream input from stdin to the child where the child  
-sorts the string and passes it on the stdoutput  
+sorts the string and passes it on the stdoutput with the string truncated  
+in the following fashion: aaaabcc-->a4bc2    
 
 current status  
 ===============  
