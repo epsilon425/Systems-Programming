@@ -9,6 +9,8 @@
 #include <signal.h>
 #include <errno.h>
 #include <setjmp.h>
+#include <string.h>
+
 
 #define KEY_MQ (key_t) 425425
 #define KEY_MM (key_t) 123412
