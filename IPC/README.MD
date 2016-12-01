@@ -7,6 +7,7 @@ current status
 10/28/2016  
 -Build a model and practice the functionality of the pipe  
 -->pipe_child.c: takes in user input of strings and passes it on to the child  
+<<<<<<< HEAD
 ---->child passes it on to stdout.  
 11/3/2016  
 -Succesfully connected the parent with the first child.  
@@ -29,3 +30,17 @@ aaaa&aaaa&DDDDDD&DDDDDD9877766867888aaa7667766555aaa
 --> 3 aaa 
     1 aaaa  
     2 dddddd
+=======
+---->child passes it on to stdout. 
+-Finished creating a program where it takes in lines of text as standard input while 
+discerning each seperation of words by a non-alphabetic character (space, new line, numbers , etc). 
+Each seperated word then will be sorted and then duplicates will be filtered.
+-Outputting result will an integer showing how many instances of the word exsits within the file 
+and the word it self. 
+
+--> ex) abc@abc#bbb
+-->output: 2 abc
+           1 bbb 
+           
+*Very standard practice program using pipes/execl/forks. 
+>>>>>>> e51d3d7d5bb5422fcdd0ddd0f13e8e348891f8fa
