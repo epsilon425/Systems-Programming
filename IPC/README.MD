@@ -24,14 +24,9 @@ the first child. The second child suppresses duplicated words.
 -->Any word larger than 30 characters will be truncated  
 -->Any string that is a not alphabet will be ignored, and be the divider  
 between words.  
-
-example)  
-aaaa&aaaa&DDDDDD&DDDDDD9877766867888aaa7667766555aaa  
---> 3 aaa 
-    1 aaaa  
-    2 dddddd
-
----->child passes it on to stdout. 
+---->child passes it on to stdout.  
+  
+11/13/2016  
 -Finished creating a program where it takes in lines of text as standard input while 
 discerning each seperation of words by a non-alphabetic character (space, new line, numbers , etc). 
 Each seperated word then will be sorted and then duplicates will be filtered.
@@ -43,4 +38,3 @@ and the word it self.
            1 bbb 
            
 *Very standard practice program using pipes/execl/forks. 
->>>>>>> e51d3d7d5bb5422fcdd0ddd0f13e8e348891f8fa
