@@ -1,3 +1,9 @@
+/* 
+THIS CODE IS MY OWN WORK, IT WAS WRITTEN WITHOUT CONSULTING
+
+A TUTOR OR CODE WRITTEN BY OTHER STUDENTS - Paul Ahn  
+*/
+
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdio.h>
@@ -62,56 +68,55 @@ if(fork()==0)//-->second child;suppresses and counts
 	PIPE2=fdopen(pipe2fd[0],"r");
 	while(theChar!=EOF)
 	{
-		
 		int i=0;
-		int j=0;
 		theChar=fgetc(PIPE2);
+
 		if(theChar==EOF)
 		{
 
-		printf("%d %s\n",wordcount,temp);
-		return; 
+			printf("%5d %s\n",wordcount,temp);
+			return;
 		}
-		while(theChar!='\n')//fill up the buffer with a word
+		while(theChar!='\n')
 		{
+
 			buffer[i]=theChar;
 			theChar=fgetc(PIPE2);
 			i++;
+		
 		}
 
 		if(i<3)
 		{
-				
-			memset(&buffer[0],0,31);
+			memset(&buffer[0],0,30);
 			continue;
 		}
-		
-			
-		if(one==0)//do this only once initally 
+
+		if(one==0)
 		{
-		strcpy(temp,buffer);	
-		one++;
-		continue;
+			strncpy(temp,buffer,i);
+			one++;
+			continue;
 		}
-	        if(!strcmp(temp,buffer))
+		//printf("%s\n",buffer);
+		
+		if(!strcmp(temp,buffer))
 		{
 
 			wordcount++;
 
-		}	
-		if(strcmp(temp,buffer))
-		{
-			printf("%d %s\n",wordcount, temp);
-			memset(&temp[0],0,31);
-			strncpy(temp,buffer,i);
-			wordcount=1;
-
 		}
-		
-		memset(&buffer[0],0,31);
-	}	
-		close(pipe2fd[0]);
 
+		if(strcmp(temp,buffer))	
+		{
+			printf("%5d %s\n",wordcount, temp);
+			memset(&temp[0],0,30);
+			strcpy(temp,buffer);
+			wordcount=1;
+		}
+		memset(&buffer[0],0,30);
+	}
+		close(pipe2fd[0]);
 	}
 else //parent 
 	{
@@ -123,7 +128,6 @@ else //parent
 	
 	while(theChar!=EOF)
 		{
-		printf("Count:%d Char:%c\nc",count,theChar);
 		theChar=fgetc(stdinF);
 		if(count==30)
 			{
@@ -132,8 +136,8 @@ else //parent
 				{
 				
 					theChar=fgetc(stdinF);
-				
-				}	
+					
+				}
 			}
 		if(!isalpha(theChar)&&N==0)
 			{
