@@ -30,7 +30,7 @@ aaaa&aaaa&DDDDDD&DDDDDD9877766867888aaa7667766555aaa
 --> 3 aaa 
     1 aaaa  
     2 dddddd
-=======
+
 ---->child passes it on to stdout. 
 -Finished creating a program where it takes in lines of text as standard input while 
 discerning each seperation of words by a non-alphabetic character (space, new line, numbers , etc). 
